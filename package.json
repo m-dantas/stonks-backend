@@ -1,0 +1,44 @@
+{
+  "name": "stonks",
+  "version": "0.0.1",
+  "description": "API para o APP STONKS",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node ./src/index.js",
+    "build": "npm run clean && npm run babel-build && npm run db:reset",
+    "start": "node ./dist/index.js",
+    "babel-build": "babel --out-dir ./dist ./src --minified --compact --source-maps false",
+    "clean": "babel-node ./prebuild",
+    "db:rebuild": "sequelize-cli db:migrate:undo:all && sequelize-cli db:migrate && sequelize-cli db:seed:undo:all && sequelize-cli db:seed:all",
+    "db:init": "sequelize-cli db:create && sequelize-cli db:migrate && sequelize-cli db:seed:all",
+    "db:reset": "sequelize-cli db:drop && sequelize-cli db:create && sequelize-cli db:migrate && sequelize-cli db:seed:all",
+    "lint": "prettier-standard src/{*,/**/*}.js seeders/{*,/**/*}.js migrations/{*,/**/*}.js"
+  },
+  "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
+    "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql2": "^2.0.2",
+    "sequelize": "^5.21.2",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.6",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.6",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "babel-register": "^6.26.0",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
+    "mkdirp": "^1.0.3",
+    "nodemon": "^2.0.2",
+    "prettier-standard": "^16.2.1",
+    "rimraf": "^3.0.2",
+    "sequelize-cli": "^5.5.1"
+  }
+}
