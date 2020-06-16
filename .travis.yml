@@ -2,11 +2,6 @@ dist: xenial
 os: linux
 language: generic
 
-cache:
-  directories:
-    - ./app/node_modules/
-    - ~/.cache
-
 before_script:
   - curl https://cli-assets.heroku.com/install.sh | sh # this is for api deploy
 

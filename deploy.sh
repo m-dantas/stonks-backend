@@ -1,6 +1,5 @@
 #!/bin/bash
 if [ "$TRAVIS_BRANCH" == "master" ] then
-	cd api
 	git init
 	git add .
 	git commit -m "deploy"
