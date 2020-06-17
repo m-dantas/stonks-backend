@@ -83,6 +83,9 @@ exports.logout = async (req, res) => {
 }
 
 exports.findAll = (req, res) => {
+  if (!req.authorized) {
+    res.status(403).send(exceptionsDefault('Operação não autorizada'))
+  }
   return Usuario.findAll()
     .then(usuarios => {
       const usuariosSemDadosSensiveis = usuarios.map(usuario => {
@@ -104,6 +107,9 @@ exports.findAll = (req, res) => {
     })
 }
 exports.findOne = (req, res) => {
+  if (!req.authorized) {
+    res.status(403).send(exceptionsDefault('Operação não autorizada'))
+  }
   const iduser = req.params.id
   Usuario.findByPk(iduser)
     .then(user => {
