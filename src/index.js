@@ -39,6 +39,4 @@ app.get(`${basePath}`, (req, res) => {
   })
 })
 
-app.listen(PORT, () => {
-  console.log(`Servidor diponível na porta ${PORT}.`)
-})
+app.listen(process.env.PORT || 5000)
