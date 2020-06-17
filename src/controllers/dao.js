@@ -27,6 +27,10 @@ const dataAccessObject = {
       })
   },
   findAll: (req, res, Model, title) => {
+    if (!req.authorized) {
+      return res.status(403).send({ message: 'Erro! Usuário não autorizado' })
+    }
+
     let where = {}
 
     if (req.query) {
@@ -42,6 +46,10 @@ const dataAccessObject = {
       })
   },
   findAllWhere: (req, res, Model) => {
+    if (!req.authorized) {
+      return res.status(403).send({ message: 'Erro! Usuário não autorizado' })
+    }
+
     Model.findAll({
       where: {
         ...req.body
@@ -57,6 +65,10 @@ const dataAccessObject = {
       })
   },
   findOne: (req, res, Model) => {
+    if (!req.authorized) {
+      return res.status(403).send({ message: 'Erro! Usuário não autorizado' })
+    }
+    
     const id = req.params.id
 
     Model.findByPk(id)
