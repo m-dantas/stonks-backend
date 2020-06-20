@@ -18,15 +18,6 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-
-app.get('/', (req, res) => {
-  try {
-    res.send('API ON')
-  } catch (error) {
-    res.send('API OFF')
-  }
-})
-
 app.use(middlewares)
 
 // create endpoints
@@ -42,7 +33,6 @@ app.get(`${basePath}`, (req, res) => {
     name,
     description,
     version,
-    bugs,
     baseEndpoint,
     endpoints: endpoints.map(endpoint => `/${endpoint}`),
   })
