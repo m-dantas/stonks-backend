@@ -4,6 +4,8 @@ const Usuario = db.usuarios
 const dao = require('./dao')
 const { hashSync } = require('bcrypt')
 
+const sgMail = require('@sendgrid/mail');
+
 const exceptionsDefault = error => {
   return {
     message: error.message || 'Erro na requisição',
@@ -11,7 +13,7 @@ const exceptionsDefault = error => {
   }
 }
 
-function generater (email) {
+function generater () {
   let numbers = []
   for (let i=1; i<5; i++) {
     const numberRandom = Math.floor(Math.random() * 9 + 1)
@@ -20,6 +22,17 @@ function generater (email) {
   return numbers
           .toString()
           .replace(/,/g,'')
+}
+
+function sendEmail (email) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
+    to: email,
+    from: 'no-reply@stonks.com',
+    subject: 'Sending with Twilio SendGrid is Fun',
+    text: 'and easy to do anywhere, even with Node.js',
+    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+  };
 }
 
 exports.create = async (req, res) => {
@@ -186,6 +199,7 @@ exports.delete = (req, res) => {
     res.status(403).send(exceptionsDefault('Operação não autorizada'))
   dao.delete(req, res, Usuario)
 }
+
 exports.deleteAll = (req, res) => {
   if (!req.authorized)
     res.status(403).send(exceptionsDefault('Operação não autorizada'))
