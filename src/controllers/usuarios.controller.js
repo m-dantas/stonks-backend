@@ -4,7 +4,8 @@ const Usuario = db.usuarios
 const dao = require('./dao')
 const { hashSync } = require('bcrypt')
 
-const sgMail = require('@sendgrid/mail');
+const sgMail = require('@sendgrid/mail')
+const templatesHTML = require('../services')
 
 const exceptionsDefault = error => {
   return {
@@ -24,15 +25,18 @@ function generater () {
           .replace(/,/g,'')
 }
 
-function sendEmail (email) {
+const sendEmail = async (email, nome, code) => {
+  const html = templatesHTML.codeVerification(nome, code).replace(/\n/g,'')
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
   const msg = {
     to: email,
-    from: 'no-reply@stonks.com',
-    subject: 'Sending with Twilio SendGrid is Fun',
-    text: 'and easy to do anywhere, even with Node.js',
-    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    from: 'stonksappcp@gmail.com',
+    subject: 'Código de verificação',
+    text: 'foi meu amado',
+    html: html,
   };
+  sgMail.send(msg)
 }
 
 exports.create = async (req, res) => {
@@ -58,6 +62,8 @@ exports.create = async (req, res) => {
     let user = await Usuario.create(Object.assign(body, { password: hash }))
     let message = 'Usuário criado com sucesso, verifique seu e-mail e insira o código de verifição'
 
+    sendEmail(req.body.email, req.body.nome, codeVerify)
+    
     return res.status(200).send({ 
       message,
       user
