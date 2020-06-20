@@ -23,6 +23,13 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      codeVerify: {
+        type: Sequelize.INTEGER
+      },
+      isVerify: {
+        type: Sequelize.BOOLEAN,
+        default: false
+      },
       nomeEmpresa: {
         type: Sequelize.STRING,
         allowNull: false

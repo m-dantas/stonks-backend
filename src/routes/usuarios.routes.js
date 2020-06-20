@@ -3,6 +3,7 @@ const usuarios = require('../controllers/usuarios.controller.js')
 
 module.exports = (usuario, base) => {
   router.post('/', usuarios.create) // registro
+  router.post('/codeVerify', usuarios.code)
   router.post('/login', usuarios.login)
   router.delete('/logout', usuarios.logout)
 

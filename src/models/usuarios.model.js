@@ -17,6 +17,13 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
+    codeVerify: {
+      type: Sequelize.INTEGER
+    },
+    isVerify: {
+      type: Sequelize.BOOLEAN,
+      default: false
+    },
     nomeEmpresa: {
       type: Sequelize.STRING,
       allowNull: false
@@ -41,11 +48,13 @@ module.exports = (sequelize, Sequelize) => {
   Usuario.authenticate = async function (email, password) {
     const user = await this.findOne({ where: { email } })
 
-    if (compareSync(password, user.password)) {
+    if (!user.isVerify) {
+      throw new Error('Usuário não verificado')
+    } else if (compareSync(password, user.password)) {
       return user.authorize()
+    } else {
+      throw new Error('Senha inválida')
     }
-
-    throw new Error('Senha inválida')
   }
 
   Usuario.logout = async function (token) {

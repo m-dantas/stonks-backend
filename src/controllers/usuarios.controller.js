@@ -11,6 +11,17 @@ const exceptionsDefault = error => {
   }
 }
 
+function generater (email) {
+  let numbers = []
+  for (let i=1; i<5; i++) {
+    const numberRandom = Math.floor(Math.random() * 9 + 1)
+    numbers.push(numberRandom)
+  }
+  return numbers
+          .toString()
+          .replace(/,/g,'')
+}
+
 exports.create = async (req, res) => {
   const { email, password } = req.body
 
@@ -25,12 +36,18 @@ exports.create = async (req, res) => {
   const hash = hashSync(req.body.password, 10)
 
   try {
-    let user = await Usuario.create(Object.assign(req.body, { password: hash }))
-    let data = await user.authorize()
+    const codeVerify = generater(req.body.email)
+    const body = {
+      ...req.body,
+      codeVerify,
+      isVerify: false
+    }
+    let user = await Usuario.create(Object.assign(body, { password: hash }))
+    let message = 'Usuário criado com sucesso, verifique seu e-mail e insira o código de verifição'
 
     return res.status(200).send({ 
-      message: 'Usuário criado',
-      data
+      message,
+      user
     })
   } catch (err) {
     let msg = ''
@@ -82,6 +99,31 @@ exports.logout = async (req, res) => {
   }
 }
 
+exports.code = async (req, res) => {
+  const { codeVerify } = req.body
+
+  try {
+    let user = await Usuario.findOne({ 
+      where: { codeVerify }
+    })
+
+    if (user) {
+      const body = { isVerify: true }
+      const id = user.id
+      user = await Usuario.update(body, { where: { id }})
+
+      return res.send({
+        message: 'Usuário verificado, efetue seu login agora.'
+      })
+    }
+  } catch (err) {
+    return res.status(400).send({
+      message: 'Erro, digite o código novamente!',
+      err
+    })
+  }
+}
+
 exports.findAll = (req, res) => {
   if (!req.authorized) {
     res.status(403).send(exceptionsDefault('Operação não autorizada'))
@@ -106,6 +148,7 @@ exports.findAll = (req, res) => {
         .send(exceptionsDefault('Ocorreu um erro ao encontrar usuários'))
     })
 }
+
 exports.findOne = (req, res) => {
   if (!req.authorized) {
     res.status(403).send(exceptionsDefault('Operação não autorizada'))
@@ -137,6 +180,7 @@ exports.update = (req, res) => {
     dao.update(req, res, Usuario)
   }
 }
+
 exports.delete = (req, res) => {
   if (!req.authorized)
     res.status(403).send(exceptionsDefault('Operação não autorizada'))

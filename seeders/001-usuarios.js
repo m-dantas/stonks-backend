@@ -10,6 +10,8 @@ module.exports = {
           sobrenome: 'Correia Dantas',
           email: 'mauricio.dantascp@gmail.com',
           password:'$2b$10$4P9ofTvzLRHdVAtWJr4dAunskgYIgT1QAXePqIWKvL0P7IzhdZX0u', // 123456
+          codeVerify: 123456,
+          isVerify: true,
           nomeEmpresa: 'Endeavor Comp.',
           cnpj: '12345678',
           createdAt: now,
