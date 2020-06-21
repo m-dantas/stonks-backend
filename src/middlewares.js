@@ -12,11 +12,9 @@ module.exports = async function (req, res, next) {
     })
 
     if (isAuthorizedUser) {
-      const now = new Date()
-      expiration.max = now.setHours(now.getHours() + 2)
-      expiration.min = now.setHours(now.getHours() - 2)
-      isValidToken =
-        expiration.min <= isAuthorizedUser.createdAt <= expiration.max
+      isValidToken = true
+    } else {
+      isValidToken = false
     }
   }
 
