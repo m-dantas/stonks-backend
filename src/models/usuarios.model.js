@@ -48,8 +48,14 @@ module.exports = (sequelize, Sequelize) => {
   Usuario.authenticate = async function (email, password) {
     const user = await this.findOne({ where: { email } })
 
+    console.log(user)
+
+    if (!user) {
+      throw new Error('Usuário não encontrado, se ainda não não possui uma conta se registre agora.')
+    }
+
     if (!user.isVerify) {
-      throw new Error('Usuário não verificado')
+      throw new Error('Usuário não verificado, clique em verificar para inserir seu código de verificação.')
     } else if (compareSync(password, user.password)) {
       return user.authorize()
     } else {
